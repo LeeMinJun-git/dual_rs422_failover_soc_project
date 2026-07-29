@@ -1,48 +1,53 @@
 # Basys3 SoC Redundant UART Link
 
-Vivado project snapshot for a redundant dual-channel UART/RS-422 link targeting
-the Basys3 Artix-7 device (`xc7a35tcpg236-1`).
+Basys3, MicroBlaze V, three custom FPGA IPs, and two STM32F411RE boards are used to implement a fault-tolerant dual-channel UART/RS-422 communication system.
 
-## Project structure
+## Repository structure
 
-- `redundant_link.xpr`: Vivado project
-- `redundant_link.srcs/sources_1/new/`: synthesizable RTL
-- `redundant_link.srcs/sim_1/new/`: self-checking testbenches
-- `redundant_link.srcs/constrs_1/new/`: Basys3 pin and timing constraints
+```text
+hardware/
+├─ ip/
+│  ├─ redundant_link_core/
+│  ├─ sensor_guard_ip/
+│  └─ voltage_display_ip/
+└─ vivado/
+   ├─ BLOCK_DESIGN.md
+   ├─ constraints/
+   └─ wrapper/
 
-The data path includes dual UART receivers, frame parsing, CRC and sequence
-checking, frame FIFOs, pair matching, channel health tracking, decision and
-duplicate filtering, output buffering, and UART transmission.
+software/
+├─ vitis/
+└─ stm32/
 
-The management path includes event arbitration, an event FIFO, AXI4-Lite
-registers, interrupt generation, and the Basys3 LED/7-segment status display.
+docs/
+└─ README.md
+```
 
-## Register map
+## Final system
 
-The AXI4-Lite register bank uses 32-bit registers at 4-byte-aligned offsets from
-`0x00` through `0x40`. See `axi_lite_regs.v` for field definitions.
+The STM32 Sender transmits the same ADC frame through channels A and B. The Basys3 validates frame structure, CRC, sequence, and channel health, applies failover/recovery policy, forwards the selected frame to the STM32 Receiver, monitors the selected ADC value, and displays voltage on the FND. MicroBlaze V manages AXI configuration, interrupts, event logging, and terminal status.
 
-## Verification status
+## Key settings
 
-The final RTL was validated with Vivado 2024.2 in Verilog-2005 mode.
+- STM32 ↔ Basys3: `115200 8N1`
+- MicroBlaze V console: `9600 8N1`
+- Frame period: `100 ms`
+- Pair wait timeout: `10 ms`
+- Channel timeout: `300 ms`
+- Fail threshold: `3`
+- Recovery threshold: `5`
 
-- All Design Sources and 16 self-checking testbenches compile and elaborate
-  successfully: 15 standalone module tests plus `tb_redundant_link_core`.
-- Simulation result: 16/16 PASS.
-- `tb_fail_count_per_transaction` additionally checks the implemented fail-event
-  policy: a local CRC error and the following pair-missing result are counted
-  separately, and the configured threshold is applied to the event count.
-- Out-of-context synthesis, placement, physical optimization, and routing of
-  `redundant_link_core` complete with 0 errors and 0 unrouted nets.
-- 100 MHz timing passes with WNS `+0.143 ns`, TNS `0.000 ns`,
-  WHS `+0.028 ns`, and THS `0.000 ns`.
-- DRC reports 0 errors. No inferred latches, multiple drivers, or port/width
-  mismatches were detected.
-- See [`FIX_REPORT.md`](FIX_REPORT.md) for the validation scope and remaining
-  non-blocking out-of-context warnings.
+## AXI address map
 
-## Generated files
+- Redundant Link Core: `0x00010000-0x00010FFF`
+- Sensor Guard IP: `0x00020000-0x00020FFF`
+- AXI UARTLite: `0x40600000`
+- AXI INTC: `0x41200000`
 
-Vivado-generated `.runs`, `.cache`, `.sim`, `.Xil`, and related output
-directories are intentionally excluded. Re-run synthesis and implementation
-locally to regenerate build products and reports.
+## Final implementation result
+
+- Vivado 2024.2 implementation completed with 0 failed routes.
+- Setup: WNS `+0.137 ns`, TNS `0`.
+- Hold: WHS `+0.007 ns`, THS `0`.
+- Bitstream/XSA generation and MicroBlaze V hardware execution completed.
+- The uploaded source snapshots were used for the final hardware demonstration.
