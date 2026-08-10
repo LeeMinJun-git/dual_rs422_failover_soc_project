@@ -1,0 +1,8 @@
+Clock period: 10.000 ns
+Clock frequency: 100000000 Hz
+WNS: 5.708 ns
+TNS: 0.000 ns
+WHS: 0.339 ns
+THS: 0.000 ns
+Setup failing endpoints: 0
+Hold failing endpoints: 0
