@@ -1,0 +1,51 @@
+{
+  "name": "redundant_link_platform",
+  "type": "PLATFORM",
+  "configuration": {
+    "description": "",
+    "xsa": "/home/jbt9412/workspace_ondevice_30514_LED/003_SOC/redundant_link_soc/redundant_link/system_bd_wrapper_final.xsa",
+    "xsaPathInPlatform": "redundant_link_platform/hw/system_bd_wrapper_final.xsa",
+    "emulationXsa": "",
+    "emulationXsaPathInPlatform": "",
+    "isCustomFSBL": false,
+    "fsblPath": "",
+    "pmufwElf": "",
+    "flow": "EMBEDDED",
+    "processorsMap": {
+      "microblaze_riscv_0": "microblaze_riscv"
+    },
+    "supportedFamily": "fpga",
+    "stdGenHookList": [
+      {
+        "key": "VITIS_SDT_REPO",
+        "value": ""
+      },
+      {
+        "key": "VITIS_SDT_BOARD_DTS",
+        "value": ""
+      },
+      {
+        "key": "VITIS_SDT_INCLUDE_DTS",
+        "value": ""
+      }
+    ],
+    "componentType": "PLATFORM",
+    "domains": [
+      {
+        "name": "standalone_microblaze_riscv_0",
+        "displayName": "standalone_microblaze_riscv_0",
+        "processor": "microblaze_riscv_0",
+        "cpuType": "microblaze_riscv",
+        "cpuInstance": "microblaze_riscv_0",
+        "os": "standalone",
+        "appTemplate": "empty_application",
+        "isBootDomain": false,
+        "qemuData": "",
+        "qemuArgsFile": "",
+        "pmcQemuArgsFile": "",
+        "isBSPGenReq": false
+      }
+    ],
+    "emptyToolchainConfiguration": []
+  }
+}
