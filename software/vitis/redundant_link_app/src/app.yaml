@@ -1,4 +1,0 @@
-domain_path: /home/jbt9412/workspace_ondevice_30514_LED/003_SOC/redundant_link_soc/redundant_link_vitis/redundant_link_platform/export/redundant_link_platform/sw/standalone_microblaze_riscv_0
-app_src_dir: /tools/Xilinx/Vitis/2024.2/data/embeddedsw/lib/sw_apps/empty_application
-template: empty_application
-lang: c
